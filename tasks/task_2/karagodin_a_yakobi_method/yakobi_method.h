@@ -1,0 +1,7 @@
+// Copyright 2023 Karagodin Andrey
+#ifndef TASKS_TASK_2_KARAGODIN_A_YAKOBI_METHOD_H_
+#define TASKS_TASK_2_KARAGODIN_A_YAKOBI_METHOD_H_
+
+void nothing() {}
+
+#endif  // TASKS_TASK_2_KARAGODIN_A_YAKOBI_METHOD_H_
