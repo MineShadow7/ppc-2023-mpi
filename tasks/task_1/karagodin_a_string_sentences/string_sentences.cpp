@@ -33,8 +33,8 @@ int countSentences(const std::string &str) {
     shift[i] = (i > 0) ? (shift[i - 1] + receive_count[i - 1]) : 0;
   }
 
-  std::string receive_data(str, displs[rankProc], receive_count[rankProc]);
-  MPI_Scatterv(str.data(), receive_count.data(), displs.data(), MPI_CHAR,
+  std::string receive_data(str, shift[rankProc], receive_count[rankProc]);
+  MPI_Scatterv(str.data(), receive_count.data(), shift.data(), MPI_CHAR,
                receive_data.data(), receive_count[rankProc], MPI_INT, 0,
                MPI_COMM_WORLD);
 
