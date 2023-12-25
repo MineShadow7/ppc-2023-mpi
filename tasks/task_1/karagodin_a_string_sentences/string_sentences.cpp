@@ -16,10 +16,10 @@ int countFunc(const std::string &str) {
 
 int countSentences(const std::string &str) {
   int size = 0, rank = 0;
-  MPI_Comm_size(MPI_COMM_WORLD, &numProc);
-  MPI_Comm_rank(MPI_COMM_WORLD, &rankProc);
-  std::vector<int> receive_count(numProc);
-  std::vector<int> shift(numProc);
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  std::vector<int> receive_count(size);
+  std::vector<int> shift(size);
 
   int stringSize = str.length();
   int sequence_size = stringSize / size;
@@ -33,9 +33,9 @@ int countSentences(const std::string &str) {
     shift[i] = (i > 0) ? (shift[i - 1] + receive_count[i - 1]) : 0;
   }
 
-  std::string receive_data(str, shift[rankProc], receive_count[rankProc]);
+  std::string receive_data(str, shift[rank], receive_count[rank]);
   MPI_Scatterv(str.data(), receive_count.data(), shift.data(), MPI_CHAR,
-               receive_data.data(), receive_count[rankProc], MPI_INT, 0,
+               receive_data.data(), receive_count[rank], MPI_INT, 0,
                MPI_COMM_WORLD);
 
   int localCount = countFunc(receive_data);
