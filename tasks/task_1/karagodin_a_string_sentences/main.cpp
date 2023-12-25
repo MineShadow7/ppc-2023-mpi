@@ -102,7 +102,7 @@ TEST(SentenceCounterTest, SingleSignTextTest) {
 }
 
 int main(int argc, char** argv) {
-   int result_code = 0;
+  int result_code = 0;
 
   ::testing::InitGoogleTest(&argc, argv);
   ::testing::TestEventListeners& listeners =
