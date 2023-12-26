@@ -3,7 +3,7 @@
 #include <mpi.h>
 #include <task_2/karagodin_a_yakobi_method/yakobi_method.h>
 
-TEST(Parallel_Operations_MPI, operator_minus) {
+TEST(Parallel_Operations_MPI, operator_minus_test) {
     int rank = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     std::vector<double> x = {0.0, 1.0, 3.0, -5.0, -1.1};
@@ -17,7 +17,7 @@ TEST(Parallel_Operations_MPI, operator_minus) {
     }
 }
 
-TEST(Parallel_Operations_MPI, normalize) {
+TEST(Parallel_Operations_MPI, normalize_test) {
     int rank = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     std::vector<double> x = {0.0, 1.0, 3.0, -5.0, -1.1};
@@ -33,7 +33,7 @@ TEST(Parallel_Operations_MPI, normalize) {
     }
 }
 
-TEST(Parallel_Operations_MPI, VectorIncrease) {
+TEST(Parallel_Operations_MPI, VectorIncrease_test) {
     int rank = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     std::vector<double> x = {0.0, 1.0, 3.0, -5.0, -1.1};
@@ -48,7 +48,7 @@ TEST(Parallel_Operations_MPI, VectorIncrease) {
     }
 }
 
-TEST(Parallel_Operations_MPI, MatrixIncrease) {
+TEST(Parallel_Operations_MPI, MatrixIncrease_test) {
     int rank = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     std::vector<std::vector<double>> x =
@@ -75,7 +75,7 @@ TEST(Parallel_Operations_MPI, MatrixIncrease) {
     }
 }
 
-TEST(Parallel_Operations_MPI, YakobiSequential) {
+TEST(Parallel_Operations_MPI, YakobiSequential_test) {
     int rank = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     std::vector<std::vector<double>> a = {{20.0, 1.0,  -2.0},
@@ -91,7 +91,7 @@ TEST(Parallel_Operations_MPI, YakobiSequential) {
     }
 }
 
-TEST(Parallel_Operations_MPI, YakobiParallel) {
+TEST(Parallel_Operations_MPI, YakobiParallel_test) {
     int rank = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     std::vector<std::vector<double>> a = {{20.0, 1.0,  -2.0},
@@ -107,7 +107,7 @@ TEST(Parallel_Operations_MPI, YakobiParallel) {
     }
 }
 
-TEST(Parallel_Operations_MPI, YakobiParallel_Another) {
+TEST(Parallel_Operations_MPI, YakobiParallel_AnotherTest) {
     int rank = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     std::vector<std::vector<double>> a = {{4,  -1, 0,  0},
