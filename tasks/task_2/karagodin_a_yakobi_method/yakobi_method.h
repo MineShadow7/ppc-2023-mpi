@@ -3,6 +3,7 @@
 #define TASKS_TASK_2_KARAGODIN_A_YAKOBI_METHOD_YAKOBI_METHOD_H_
 
 #include <mpi.h>
+#include <iostream>
 #include <vector>
 #include <algorithm>
 
@@ -18,7 +19,7 @@ std::vector<double> VectorIncrease(
     const std::vector<double> &v, std::size_t shift);
 
 std::vector<double> YakobiParallel(
-    std::vector<std::vector<double>> a, const std::vector<double> b);
+    std::vector<std::vector<double>> a, std::vector<double> b);
 
 std::vector<double> YakobiSequential(
     const std::vector<std::vector<double>>& a,
