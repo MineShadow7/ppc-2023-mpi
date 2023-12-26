@@ -91,8 +91,8 @@ std::vector<double> YakobiParallel(std::vector<std::vector<double>> a,
     return x;
 }
 
-std::vector<double> JacobiSequential(const std::vector<std::vector<double>> &a,
- const std::vector<double> &b) {
+std::vector<double> YakobiSequential(const std::vector<std::vector<double>>& a,
+ const std::vector<double>& b) {
     std::size_t dim = a.size();
     std::vector<double> x(dim);
     double norm = 0.0;
@@ -102,7 +102,7 @@ std::vector<double> JacobiSequential(const std::vector<std::vector<double>> &a,
         for (std::size_t i = 0; i < dim; i++) {
             const std::vector<double> &row = a[i];
             for (std::size_t j = 0; j < i; j++) {
-                nextX[i] -= row[j] * X[j];
+                nextX[i] -= row[j] * x[j];
             }
             for (std::size_t j = i + 1; j < dim; j++) {
                 nextX[i] -= row[j] * x[j];
