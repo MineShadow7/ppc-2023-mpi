@@ -1,77 +1,131 @@
 // Copyright 2023 Karagodin Andrey
-#include <iostream>
+#include <gtest/gtest.h>
 #include <mpi.h>
+#include <task_2/karagodin_a_yakobi_method/yakobi_method.h>
 
-#define SIZE 4 // размер матрицы и вектора
-
-int main(int argc, char** argv) {
-    int rank, size;
-    double A[SIZE][SIZE] = {{2, -1, 0, 1}, {1, 3, -1, 1}, {0, 2, 4, -1}, {1, 2, -1, 4}};
-    double b[SIZE] = {2, 1, 0, 2};
-    double x[SIZE];
-
-    MPI_Init(&argc, &argv);
+TEST(Parallel_Operations_MPI, Matrix_1x1) {
+    int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    double x_new[SIZE];
-    double eps = 1e-6;
-    int max_iterations = 100;
-    int iteration = 0;
-    double residual;
+    Matrix A = {
+        { 3 },
+    };
+    Vector b = { 6 };
+    Vector expectedX = { 2 };
 
-    do {
-        if (rank == 0) {
-            // Выполняем одну итерацию метода Якоби на процессе 0
-            for (int i = 0; i < SIZE; i++) {
-                x_new[i] = b[i];
-                for (int j = 0; j < SIZE; j++) {
-                    if (j != i) {
-                        x_new[i] -= A[i][j] * x[j];
-                    }
-                }
-                x_new[i] /= A[i][i];
-            }
-        }
+    Vector x = calculateJacobiParallel(A, b);
 
-        // Рассылаем x_new всем процессам
-        MPI_Bcast(x_new, SIZE, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-
-        // Вычисляем норму разницы между текущим и предыдущим приближением
-        residual = 0;
-        for (int i = rank; i < SIZE; i += size) {
-            double diff = x_new[i] - x[i];
-            residual += diff * diff;
-        }
-        MPI_Allreduce(MPI_IN_PLACE, &residual, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-        residual = sqrt(residual);
-
-        // Обновляем значения x на всех процессах для следующей итерации
-        for (int i = rank; i < SIZE; i += size) {
-            x[i] = x_new[i];
-        }
-
-        // Синхронизируем процессы после каждой итерации
-        MPI_Barrier(MPI_COMM_WORLD);
-
-        // Увеличиваем счетчик итераций
-        iteration++;
-
-        // Проверяем условия остановки: достигнута максимальная
-        // число итераций или достигнута требуемая точность
-    } while (iteration < max_iterations && residual > eps);
-
-    // Собираем значения x со всех процессов на процессе 0
-    MPI_Gather(x, SIZE / size, MPI_DOUBLE, x_new, SIZE / size, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-
-    // Выводим результат на процессе 0
     if (rank == 0) {
-        std::cout << "Solution:" << std::endl;
-        for (int i = 0; i < SIZE; i++) {
-            std::cout << "x[" << i << "] = " << x_new[i] << std::endl;
+        for (int i = 0; i < x.size(); i++) {
+            ASSERT_NEAR(expectedX[i], x[i], EPSILON * 10.0);
         }
     }
+}
 
+TEST(Parallel_Operations_MPI, Matrix_2x2) {
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+    Matrix A = {
+        { 3, 2 },
+        { 2, 3 },
+    };
+    Vector b = { 1, -1 };
+    Vector expectedX = { 1, -1 };
+
+    Vector x = calculateJacobiParallel(A, b);
+
+    if (rank == 0) {
+        for (int i = 0; i < x.size(); i++) {
+            ASSERT_NEAR(expectedX[i], x[i], EPSILON * 10.0);
+        }
+    }
+}
+
+TEST(Parallel_Operations_MPI, Matrix_3x3) {
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+    Matrix A = {
+        { 5, 2, 2 },
+        { 2, 6, 3 },
+        { 3, 3, 7 }
+    };
+    Vector b = { 9, 11, 13 };
+    Vector expectedX = { 1, 1, 1 };
+
+    Vector x = calculateJacobiParallel(A, b);
+
+    if (rank == 0) {
+        for (int i = 0; i < x.size(); i++) {
+            ASSERT_NEAR(expectedX[i], x[i], EPSILON * 10.0);
+        }
+    }
+}
+
+TEST(Parallel_Operations_MPI, Matrix_Diagonal_3x3) {
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+    Matrix A = {
+        { 1, 0, 0 },
+        { 0, 1, 0 },
+        { 0, 0, 1 }
+    };
+    Vector b = { 9, 11, 13 };
+    Vector expectedX = b;
+
+    Vector x = calculateJacobiParallel(A, b);
+
+    if (rank == 0) {
+        for (int i = 0; i < x.size(); i++) {
+            ASSERT_NEAR(expectedX[i], x[i], EPSILON * 10.0);
+        }
+    }
+}
+
+TEST(Parallel_Operations_MPI, Matrix_4x4) {
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+    Matrix A = {
+        { 6, 2, 2, 1 },
+        { 2, 7, 3, 1 },
+        { 3, 2, 7, 1 },
+        { 3, 3, 7, 14 }
+    };
+    Vector b = { 11, 13, 13, 27 };
+    Vector expectedX = { 1, 1, 1, 1 };
+
+    Vector x = calculateJacobiParallel(A, b);
+
+    if (rank == 0) {
+        for (int i = 0; i < x.size(); i++) {
+            ASSERT_NEAR(expectedX[i], x[i], EPSILON * 10.0);
+        }
+    }
+}
+
+
+
+
+int main(int argc, char** argv) {
+    int result_code = 0;
+    int rank = 0;
+
+    ::testing::InitGoogleTest(&argc, argv);
+    ::testing::TestEventListeners& listeners =
+        ::testing::UnitTest::GetInstance()->listeners();
+
+    if (MPI_Init(&argc, &argv) != MPI_SUCCESS) MPI_Abort(MPI_COMM_WORLD, -1);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+    if (rank != 0) {
+        delete listeners.Release(listeners.default_result_printer());
+    }
+
+    result_code = RUN_ALL_TESTS();
     MPI_Finalize();
-    return 0;
+
+    return result_code;
 }
