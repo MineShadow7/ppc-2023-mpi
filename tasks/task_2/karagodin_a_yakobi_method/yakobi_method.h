@@ -2,9 +2,9 @@
 #ifndef TASKS_TASK_2_KARAGODIN_A_YAKOBI_METHOD_YAKOBI_METHOD_H_
 #define TASKS_TASK_2_KARAGODIN_A_YAKOBI_METHOD_YAKOBI_METHOD_H_
 
+#include <mpi.h>
 #include <vector>
 #include <algorithm>
-#include <mpi.h>
 
 double normalize(const std::vector<double> &v);
 
